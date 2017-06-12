@@ -2,6 +2,7 @@ class SearchController < ApplicationController
   include SearchHelper
   def query
     start_time = Time.now
+
     @potential_clients = []
 
     @yelp_businesses = query_yelp_api(params)
