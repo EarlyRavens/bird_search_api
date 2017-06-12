@@ -8,6 +8,8 @@ class SearchController < ApplicationController
     @yelp_businesses = query_yelp_api(params)
     @mechanize = Mechanize.new
 
+    @yelp_business_threads = @yelp_businesses.map{|business| Thread.new{evaluate(business)}}
+
     render json: @yelp_businesses.to_json
   end
 end
