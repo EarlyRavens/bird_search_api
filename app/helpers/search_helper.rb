@@ -38,15 +38,16 @@ module SearchHelper
         else
           add_potential_client(business)
         end
-
+        @processing_time += (Time.now - start_evaluate)
       rescue
+        @processing_time += (Time.now - start_evaluate)
         "Business skipped."
       end
 
     else
+      @processing_time += (Time.now - start_evaluate)
       add_potential_client(business)
     end
-    @processing_time += (Time.now - start_evaluate)
   end
 
   private
