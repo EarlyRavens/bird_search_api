@@ -54,4 +54,8 @@ module SearchHelper
   def has_a_url?(dom)
     business_url(dom) ? true : false
   end
+
+  def business_url(dom)
+    return dom.css('.biz-website a').last
+  end
 end
