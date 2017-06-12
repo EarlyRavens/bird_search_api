@@ -103,6 +103,13 @@ module SearchHelper
     Timeout::timeout(GOOGLE_API_TIME_LIMIT) {HTTParty.get("https://www.googleapis.com/pagespeedonline/v2/runPagespeed?url=#{url}&strategy=mobile&key=#{ENV['SPEED_API_KEY']}")}
   end
 
+  def calculate_page_score(google_response, points_from_seo)
+    speed_score = MAXIMUM_SPEED_SCORE * (google_response["ruleGroups"]["SPEED"]["score"]/MAXIMUM_GOOGLE_SCORE)
+    usability_score = MAXIMUM_USABILITY_SCORE * (google_response["ruleGroups"]["USABILITY"]["score"]/MAXIMUM_GOOGLE_SCORE)
+
+    return speed_score + usability_score + points_from_seo
+  end
+
 
 
 
