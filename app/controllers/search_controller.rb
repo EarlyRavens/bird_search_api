@@ -9,6 +9,7 @@ class SearchController < ApplicationController
     @mechanize = Mechanize.new
 
     @yelp_business_threads = @yelp_businesses.map{|business| Thread.new{evaluate(business)}}
+    @yelp_business_threads.each {|thread| thread.join}
 
     render json: @yelp_businesses.to_json
   end
