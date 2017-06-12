@@ -50,4 +50,8 @@ module SearchHelper
   def get_page_dom(business)
     @mechanize.get(business['url'])
   end
+
+  def has_a_url?(dom)
+    business_url(dom) ? true : false
+  end
 end
