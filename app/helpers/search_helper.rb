@@ -110,9 +110,9 @@ module SearchHelper
     return speed_score + usability_score + points_from_seo
   end
 
-
-
-
+  def add_potential_client(client)
+    @potential_clients << client
+  end
 
 
 
