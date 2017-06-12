@@ -16,11 +16,13 @@ module SearchHelper
   end
 
   def query_yelp_api(form_params)
+    start_yelp_api = Time.now
     HTTParty.get("https://api.yelp.com/v3/businesses/search?location=#{form_params[:location]}&term=#{form_params[:business]}", headers: {"Authorization" => "Bearer #{ENV['YELP_API_KEY']}"})['businesses']
+    @processing_time += (Time.now - start_yelp_api)
   end
 
   def evaluate(business)
-
+    start_evaluate = Time.now
     business_page_dom = get_page_dom(business)
 
     if has_a_url?(business_page_dom)
@@ -43,6 +45,7 @@ module SearchHelper
     else
       add_potential_client(business)
     end
+    @procesing_time += (Time.now - start_evaluate)
   end
 
   private
