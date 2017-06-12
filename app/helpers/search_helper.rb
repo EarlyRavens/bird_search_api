@@ -83,6 +83,9 @@ module SearchHelper
     return dom.css("meta[charset = 'UTF-8']","meta[charset = 'utf-8']","meta[name = 'viewport']").count
   end
 
+  def all_metas_count(dom)
+    return dom.css('meta').count
+  end
 
 
 
