@@ -87,6 +87,10 @@ module SearchHelper
     return dom.css('meta').count
   end
 
+  def meta_score(dom)
+    return all_metas_count(dom) - false_metas_count(dom)
+  end
+
 
 
 
