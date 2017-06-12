@@ -99,7 +99,9 @@ module SearchHelper
     return score > SEO_MINIMUM_SCORE
   end
 
-
+  def timeout_query_google_api(url)
+    Timeout::timeout(GOOGLE_API_TIME_LIMIT) {HTTParty.get("https://www.googleapis.com/pagespeedonline/v2/runPagespeed?url=#{url}&strategy=mobile&key=#{ENV['SPEED_API_KEY']}")}
+  end
 
 
 
