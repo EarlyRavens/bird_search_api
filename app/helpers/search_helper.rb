@@ -95,7 +95,9 @@ module SearchHelper
     return dom.css('h1', 'h2', 'h3').count
   end
 
-
+  def seo_score_filter(score)
+    return score > SEO_MINIMUM_SCORE
+  end
 
 
 
