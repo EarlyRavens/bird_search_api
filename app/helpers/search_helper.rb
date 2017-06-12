@@ -19,4 +19,30 @@ module SearchHelper
     HTTParty.get("https://api.yelp.com/v3/businesses/search?location=#{form_params[:location]}&term=#{form_params[:business]}", headers: {"Authorization" => "Bearer #{ENV['YELP_API_KEY']}"})['businesses']
   end
 
+  def evaluate(business)
+
+    business_page_dom = get_page_dom(business)
+
+    if has_a_url?(business_page_dom)
+      http_url = client_page(business_page_dom)
+      begin
+        doc = timeout_scrape_client_page(http_url)
+        seo_points = calculate_seo_points(doc)
+        if seo_score_filter(seo_points)
+          response = timeout_query_google_api(http_url)
+          page_score = calculate_page_score(response, seo_points)
+          add_potential_client(business) if failed_test(page_score)
+        else
+          add_potential_client(business)
+        end
+
+      rescue
+        "Business skipped."
+      end
+
+    else
+      add_potential_client(business)
+    end
+  end
+
 end
