@@ -58,4 +58,8 @@ module SearchHelper
   def business_url(dom)
     return dom.css('.biz-website a').last
   end
+
+  def client_page(dom)
+    return "http://#{business_url(dom).text}"
+  end
 end
