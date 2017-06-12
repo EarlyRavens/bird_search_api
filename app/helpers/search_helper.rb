@@ -62,4 +62,27 @@ module SearchHelper
   def client_page(dom)
     return "http://#{business_url(dom).text}"
   end
+
+  def timeout_scrape_client_page(long_url)
+    Timeout::timeout(CLIENT_PAGE_TIME_LIMIT) { Nokogiri::HTML(open(long_url))}
+  end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 end
