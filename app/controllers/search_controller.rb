@@ -10,6 +10,6 @@ class SearchController < ApplicationController
     @yelp_business_threads = @yelp_businesses.map{|business| Thread.new{evaluate(business)}}
     @yelp_business_threads.each {|thread| thread.join}
 
-    render json: {data: @potential_clients.to_json, quote: random, time: (Time.now - @a)}
+    render json: {data: @potential_clients, quote: random, time: (Time.now - @a)}.to_json
   end
 end
