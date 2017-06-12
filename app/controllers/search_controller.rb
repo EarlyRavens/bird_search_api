@@ -1,8 +1,6 @@
 class SearchController < ApplicationController
   include SearchHelper
   def query
-    params["business"] = "korean"
-    params["location"] = "94105"
     @start_time = Time.now
     @potential_clients = []
     @processing_time = 0
