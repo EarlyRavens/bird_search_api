@@ -91,7 +91,9 @@ module SearchHelper
     return all_metas_count(dom) - false_metas_count(dom)
   end
 
-
+  def headings_count(dom)
+    return dom.css('h1', 'h2', 'h3').count
+  end
 
 
 
