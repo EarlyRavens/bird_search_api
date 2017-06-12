@@ -1,9 +1,11 @@
 class SearchController < ApplicationController
   include SearchHelper
   def query
+    params["business"] = "korean"
+    params["location"] = "94105"
     @start_time = Time.now
     @potential_clients = []
-    @procesing_time = 0
+    @processing_time = 0
 
     @yelp_businesses = query_yelp_api(params)
     @mechanize = Mechanize.new
@@ -12,6 +14,6 @@ class SearchController < ApplicationController
     @yelp_business_threads.each {|thread| thread.join}
     @response_time = Time.now - @start_time
 
-    render json: {data: @potential_clients, quote: random, response_time: @response_time, virtual_time: @response_time}.to_json
+    render json: {data: @potential_clients, quote: random, response_time: @response_time, processing_time: @processing_time}.to_json
   end
 end
