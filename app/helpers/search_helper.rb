@@ -45,4 +45,9 @@ module SearchHelper
     end
   end
 
+  private
+
+  def get_page_dom(business)
+    @mechanize.get(business['url'])
+  end
 end
