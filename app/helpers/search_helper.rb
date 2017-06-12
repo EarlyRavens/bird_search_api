@@ -75,7 +75,9 @@ module SearchHelper
     return title_points + meta_points + heading_points
   end
 
-
+  def has_title?(dom)
+    return !dom.css('title').empty?
+  end
 
 
 
