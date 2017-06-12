@@ -114,8 +114,8 @@ module SearchHelper
     @potential_clients << client
   end
 
-
-
-
+  def failed_test(score)
+    return score < MINIMUM_SUCCESS_BENCHMARK
+  end
 
 end
