@@ -67,6 +67,13 @@ module SearchHelper
     Timeout::timeout(CLIENT_PAGE_TIME_LIMIT) { Nokogiri::HTML(open(long_url))}
   end
 
+  def calculate_seo_points(client_page_dom)
+    title_points = has_title?(client_page_dom) ? MAXIMUM_TITLE_SCORE : 0
+    meta_points = meta_score(client_page_dom) > 0 ? MAXIMUM_META_SCORE : 0
+    heading_points = headings_count(client_page_dom) > 0 ? MAXIMUM_HEADING_SCORE : 0
+
+    return title_points + meta_points + heading_points
+  end
 
 
 
