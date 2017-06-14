@@ -26,10 +26,13 @@ module SearchHelper
     business_page_dom = get_page_dom(business)
 
     if has_a_url?(business_page_dom)
-      http_url = client_page(business_page_dom)
+      # url = business_url(business_page_dom).text #returns as http://
+      url = client_page(business_page_dom)
       begin
-        doc = timeout_scrape_client_page(http_url)
-        seo_points = calculate_seo_points(doc)
+        # doc = timeout_scrape_client_page(http_url) #returns nokogiri document
+        # seo_points = calculate_seo_points(doc) #calculates current seopoints
+        # seo_points = Timeout::timeout(CLIENT_PAGE_TIME_LIMIT) {HTTParty.get("http://earlybird-extractor.herokuapp.com/api/seoscore?business=#{url}")["score"]}
+        seo_points = timeout_scrape_client_page(url)
         if seo_score_filter(seo_points)
           response = timeout_query_google_api(http_url)
           page_score = calculate_page_score(response, seo_points)
@@ -62,11 +65,13 @@ module SearchHelper
   end
 
   def client_page(dom)
-    return "http://#{business_url(dom).text}"
+    # return "http://#{business_url(dom).text}"
+    return business_url(dom).text
   end
 
   def timeout_scrape_client_page(long_url)
-    Timeout::timeout(CLIENT_PAGE_TIME_LIMIT) { Nokogiri::HTML(open(long_url))}
+    # Timeout::timeout(CLIENT_PAGE_TIME_LIMIT) { Nokogiri::HTML(open(long_url))}
+    Timeout::timeout(CLIENT_PAGE_TIME_LIMIT) {HTTParty.get("http://earlybird-extractor.herokuapp.com/api/seoscore?business=#{long_url}")["score"]}
   end
 
   def calculate_seo_points(client_page_dom)
