@@ -86,4 +86,14 @@ module SearchHelper
     return score < MINIMUM_SUCCESS_BENCHMARK
   end
 
+  def reset_server
+    p "Resetting Server in | - 3"
+      sleep 1
+      p "Resetting Server in / - 2"
+      sleep 1
+      p "Resetting Server in - - 1"
+      sleep 1
+      p "Resetting Server Now:"
+      HTTParty.delete("https://api.heroku.com/apps/threadraven/dynos", headers: {"Authorization" => "Bearer a17504ec-bd05-4f72-8cdb-da9c9a233172", "Accept" => "application/vnd.heroku+json; version=3"})
+  end
 end

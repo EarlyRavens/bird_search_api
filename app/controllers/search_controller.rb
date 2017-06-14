@@ -13,20 +13,11 @@ class SearchController < ApplicationController
 
     @processing_time = Time.now - start_time
 
-    thread1 = Thread.new {
-      p "Resetting Server in 3"
-      sleep 1
-      p "Resetting Server in 3"
-      sleep 1
-      p "Resetting Server in 3"
-      sleep 1
-      p "Resetting Server Now:"
-      HTTParty.delete("https://api.heroku.com/apps/threadraven/dynos", headers: {"Authorization" => "Bearer a17504ec-bd05-4f72-8cdb-da9c9a233172", "Accept" => "application/vnd.heroku+json; version=3"})
-    }
-
+    thread1 = Thread.new {reset_server}
     thread2 = Thread.new {
       p "Rendering data"
       render json: {data: @potential_clients, quote: random, processing_time: @processing_time}.to_json}
+
     thread1.join
     thread2.join
   end
