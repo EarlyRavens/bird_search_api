@@ -1,12 +1,7 @@
 module SearchHelper
   CLIENT_PAGE_TIME_LIMIT = 5
-  MAXIMUM_TITLE_SCORE = 15
-  MAXIMUM_META_SCORE = 15
-  MAXIMUM_HEADING_SCORE = 5
   SEO_MINIMUM_SCORE = 14
   GOOGLE_API_TIME_LIMIT = 12
-  MAXIMUM_SPEED_SCORE = 25
-  MAXIMUM_USABILITY_SCORE = 45
   MAXIMUM_GOOGLE_SCORE = 100.0
   MINIMUM_SUCCESS_BENCHMARK = 79
   MAXIMUM_YELP_SCRAPE = 50
@@ -26,10 +21,9 @@ module SearchHelper
     business_page_dom = get_page_dom(business)
 
     if has_a_url?(business_page_dom)
-      http_url = client_page(business_page_dom)
+      url = client_page(business_page_dom)
       begin
-        doc = timeout_scrape_client_page(http_url)
-        seo_points = calculate_seo_points(doc)
+        seo_points = timeout_scrape_client_page(url)
         if seo_score_filter(seo_points)
           response = timeout_query_google_api(http_url)
           page_score = calculate_page_score(response, seo_points)
@@ -62,39 +56,11 @@ module SearchHelper
   end
 
   def client_page(dom)
-    return "http://#{business_url(dom).text}"
+    return business_url(dom).text
   end
 
   def timeout_scrape_client_page(long_url)
-    Timeout::timeout(CLIENT_PAGE_TIME_LIMIT) { Nokogiri::HTML(open(long_url))}
-  end
-
-  def calculate_seo_points(client_page_dom)
-    title_points = has_title?(client_page_dom) ? MAXIMUM_TITLE_SCORE : 0
-    meta_points = meta_score(client_page_dom) > 0 ? MAXIMUM_META_SCORE : 0
-    heading_points = headings_count(client_page_dom) > 0 ? MAXIMUM_HEADING_SCORE : 0
-
-    return title_points + meta_points + heading_points
-  end
-
-  def has_title?(dom)
-    return !dom.css('title').empty?
-  end
-
-  def false_metas_count(dom)
-    return dom.css("meta[charset = 'UTF-8']","meta[charset = 'utf-8']","meta[name = 'viewport']").count
-  end
-
-  def all_metas_count(dom)
-    return dom.css('meta').count
-  end
-
-  def meta_score(dom)
-    return all_metas_count(dom) - false_metas_count(dom)
-  end
-
-  def headings_count(dom)
-    return dom.css('h1', 'h2', 'h3').count
+    Timeout::timeout(CLIENT_PAGE_TIME_LIMIT) {HTTParty.get("http://earlybird-extractor.herokuapp.com/api/seoscore?business=#{long_url}")["score"]}
   end
 
   def seo_score_filter(score)
